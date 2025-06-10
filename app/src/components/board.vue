@@ -42,7 +42,7 @@ const flipCard = (card) => {
                 <div v-for="card in cards" class="col-auto m-3 flip-container" :class="{ 'flipped': card.isFlipped }" @click="flipCard(card)">
                     <div class="memorycard">
                         <div class="front border rounded shadow"><img width="100" height="150" src="/images/cardback.png"></div>
-                        <div class="back rounded border"><img width="100" height="150" :src="'/images/' + card.img"></div>
+                        <div class="back border rounded  shadow"><img width="100" height="150" :src="'/images/' + card.img"></div>
                     </div>
                 </div>
             </div>
