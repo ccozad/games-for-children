@@ -1,5 +1,8 @@
 <script setup>
 import { ref } from 'vue';
+const isFinished = ref(false);
+const start = ref(false);
+const turnCount = ref(0);
 const cards = ref([
     {
         name: 'Apple',
@@ -18,19 +21,7 @@ const cards = ref([
         img: 'orange.jpg',
         isFlipped: false,
         isMatched: false
-    }/*,
-    {
-        name: 'Pineapple',
-        img: 'pineapple.png'
-    },
-    {
-        name: 'Strawberry',
-        img: 'strawberry.png'
-    },
-    {
-        name: 'Watermelon',
-        img: 'watermelon.png'
-    }*/
+    }
 ]);
 
 var selectedCards = ref([]);
@@ -42,8 +33,11 @@ memoryCards.value = memoryCards.value.concat(cards1, cards2); //Duplicate cards 
 memoryCards.value.sort(() => Math.random() - 0.5);
 
 const flipCard = (card) => {
-    card.isFlipped = true;
-    if (selectedCards.value.length < 2) {
+    
+    
+    if (selectedCards.value.length < 2  && !card.isMatched && !card.isFlipped) {
+        card.isFlipped = true;
+        turnCount.value++;
         selectedCards.value.push(card);
     }
     if (selectedCards.value.length === 2) {
@@ -52,6 +46,7 @@ const flipCard = (card) => {
                 selectedCards.value[0].isMatched = true;
                 selectedCards.value[1].isMatched = true;
                 selectedCards.value = [];
+                checkGameFinished();
             }, 500);
         } else {
             setTimeout(() => {
@@ -62,10 +57,30 @@ const flipCard = (card) => {
         }
     }
 };
+
+const checkGameFinished = () => {
+    isFinished.value = memoryCards.value.every(card => card.isMatched);
+};
+
+const startNewGame = () => {
+    isFinished.value = false;
+    turnCount.value = 0;
+    memoryCards.value.forEach(card => {
+        card.isFlipped = false;
+        card.isMatched = false;
+    });
+    selectedCards.value = [];
+    memoryCards.value.sort(() => Math.random() - 0.5); // Shuffle the cards again
+};
 </script>
 
 <template>
     <div class="row">
+        <div class="mx-3"><h1>Memory Game</h1></div>
+        <div v-if="isFinished" class="mx-3"><h1>You won!</h1></div>
+        <div class="mx-3">
+            <h4>Moves: {{ turnCount }}</h4>
+        </div>
         <div class="col-md-6 col-lg-6 col-xl-6 mx-auto">
             <div class="row gx-0">
                 <div v-for="card in memoryCards" class="col-auto m-3 flip-container" :class="{ 'flipped': card.isFlipped, 'matched' : card.isMatched }" @click="flipCard(card)">
