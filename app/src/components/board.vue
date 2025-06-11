@@ -30,6 +30,13 @@ const cards = ref([
     }*/
 ]);
 
+var memoryCards = ref([]);
+const cards1 = JSON.parse(JSON.stringify(cards.value)); //Deep copy to avoid reference issues
+const cards2 = JSON.parse(JSON.stringify(cards.value)); //Deep copy to avoid reference issues
+memoryCards.value = memoryCards.value.concat(cards1, cards2); //Duplicate cards by value
+// Shuffle the cards
+memoryCards.value.sort(() => Math.random() - 0.5);
+
 const flipCard = (card) => {
     card.isFlipped = true;
 };
@@ -38,12 +45,10 @@ const flipCard = (card) => {
 <template>
     <div class="row">
         <div class="col-md-6 col-lg-6 col-xl-6 mx-auto">
-            <div class="row justify-content-md-center">
-                <div v-for="card in cards" class="col-auto m-3 flip-container" :class="{ 'flipped': card.isFlipped }" @click="flipCard(card)">
-                    <div class="memorycard">
-                        <div class="front border rounded shadow"><img width="100" height="150" src="/images/cardback.png"></div>
-                        <div class="back border rounded  shadow"><img width="100" height="150" :src="'/images/' + card.img"></div>
-                    </div>
+            <div class="row gx-0">
+                <div v-for="card in memoryCards" class="col-auto m-3 flip-container" :class="{ 'flipped': card.isFlipped }" @click="flipCard(card)">
+                    <div class="front border rounded shadow"><img width="100" height="150" src="/images/cardback.png"></div>
+                    <div class="back border rounded shadow"><img width="100" height="150" :src="'/images/' + card.img"></div>
                 </div>
             </div>
         </div>
@@ -78,7 +83,6 @@ const flipCard = (card) => {
     transform-style: preserve-3d;
     top: 0;
     left: 0;
-    width: 100%;
 }
 
 .back {
@@ -96,6 +100,7 @@ const flipCard = (card) => {
     -o-transform: rotateY(0deg);
     -ms-transform: rotateY(0deg);
     transform: rotateY(0deg);
+    justify-content: center;
 }
 
 .flip-container.flipped .front {
@@ -104,5 +109,6 @@ const flipCard = (card) => {
     -o-transform: rotateY(180deg);
     -ms-transform: rotateY(180deg);
     transform: rotateY(180deg);
+    justify-content: center;
 }
 </style>
