@@ -4,17 +4,20 @@ const cards = ref([
     {
         name: 'Apple',
         img: 'apple.jpg',
-        isFlipped: false
+        isFlipped: false,
+        isMatched: false
     },
     {
         name: 'Banana',
         img: 'banana.jpg',
-        isFlipped: false
+        isFlipped: false,
+        isMatched: false
     },
     {
         name: 'Orange',
         img: 'orange.jpg',
-        isFlipped: false
+        isFlipped: false,
+        isMatched: false
     }/*,
     {
         name: 'Pineapple',
@@ -30,6 +33,7 @@ const cards = ref([
     }*/
 ]);
 
+var selectedCards = ref([]);
 var memoryCards = ref([]);
 const cards1 = JSON.parse(JSON.stringify(cards.value)); //Deep copy to avoid reference issues
 const cards2 = JSON.parse(JSON.stringify(cards.value)); //Deep copy to avoid reference issues
@@ -39,6 +43,24 @@ memoryCards.value.sort(() => Math.random() - 0.5);
 
 const flipCard = (card) => {
     card.isFlipped = true;
+    if (selectedCards.value.length < 2) {
+        selectedCards.value.push(card);
+    }
+    if (selectedCards.value.length === 2) {
+        if (selectedCards.value[0].name === selectedCards.value[1].name) {
+            setTimeout(() => {
+                selectedCards.value[0].isMatched = true;
+                selectedCards.value[1].isMatched = true;
+                selectedCards.value = [];
+            }, 500);
+        } else {
+            setTimeout(() => {
+                selectedCards.value[0].isFlipped = false;
+                selectedCards.value[1].isFlipped = false;
+                selectedCards.value = [];
+            }, 1000);
+        }
+    }
 };
 </script>
 
@@ -46,7 +68,7 @@ const flipCard = (card) => {
     <div class="row">
         <div class="col-md-6 col-lg-6 col-xl-6 mx-auto">
             <div class="row gx-0">
-                <div v-for="card in memoryCards" class="col-auto m-3 flip-container" :class="{ 'flipped': card.isFlipped }" @click="flipCard(card)">
+                <div v-for="card in memoryCards" class="col-auto m-3 flip-container" :class="{ 'flipped': card.isFlipped, 'matched' : card.isMatched }" @click="flipCard(card)">
                     <div class="front border rounded shadow"><img width="100" height="150" src="/images/cardback.png"></div>
                     <div class="back border rounded shadow"><img width="100" height="150" :src="'/images/' + card.img"></div>
                 </div>
@@ -110,5 +132,9 @@ const flipCard = (card) => {
     -ms-transform: rotateY(180deg);
     transform: rotateY(180deg);
     justify-content: center;
+}
+
+.matched{
+   opacity: 0.3;
 }
 </style>
