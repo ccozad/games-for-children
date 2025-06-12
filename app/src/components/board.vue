@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from 'vue';
 const isFinished = ref(false);
-const start = ref(false);
 const turnCount = ref(0);
 const cards = ref([
     {
@@ -75,20 +74,35 @@ const startNewGame = () => {
 </script>
 
 <template>
-    <div class="row">
-        <div class="mx-3"><h1>Memory Game</h1></div>
-        <div v-if="isFinished" class="mx-3"><h1>You won!</h1></div>
-        <div class="mx-3">
-            <h4>Moves: {{ turnCount }}</h4>
+    <div class="container">
+         <div class="row mt-3">
+            <div class="col-sm-6 text-end">
+                <button type="button" class="btn btn-primary hud-button">
+                    Moves <span class="badge bg-secondary">{{ turnCount }}</span>
+                </button>
+            </div>
+            <div class="col-sm-6 text-start">
+                <button type="button" class="btn btn-primary hud-button" @click="startNewGame">
+                    Reset
+                </button>
+            </div>
         </div>
-        <div class="col-md-6 col-lg-6 col-xl-6 mx-auto">
-            <div class="row gx-0">
-                <div v-for="card in memoryCards" class="col-auto m-3 flip-container" :class="{ 'flipped': card.isFlipped, 'matched' : card.isMatched }" @click="flipCard(card)">
-                    <div class="front border rounded shadow"><img width="100" height="150" src="/images/cardback.png"></div>
-                    <div class="back border rounded shadow"><img width="100" height="150" :src="'/images/' + card.img"></div>
+        <div class="row mt-3">
+            <div class="col-12 text-center">
+                <div v-if="isFinished" class="mx-3"><h1>You won!</h1></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="row gx-0 text-center justify-content-center">
+                    <div v-for="card in memoryCards" class="col-auto m-3 flip-container" :class="{ 'flipped': card.isFlipped, 'matched' : card.isMatched }" @click="flipCard(card)">
+                        <div class="front border rounded shadow"><img width="100" height="150" src="/images/cardback.png"></div>
+                        <div class="back border rounded shadow"><img width="100" height="150" :src="'/images/' + card.img"></div>
+                    </div>
                 </div>
             </div>
         </div>
+        
     </div>
 </template>
 
@@ -151,5 +165,9 @@ const startNewGame = () => {
 
 .matched{
    opacity: 0.3;
+}
+
+.hud-button {
+    width: 120px;
 }
 </style>
