@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Board from './components/board.vue';
+import { RouterLink, RouterView } from 'vue-router'
 </script>
 
 <template>
@@ -9,7 +9,7 @@ import Board from './components/board.vue';
 
   <main>
     <div>
-      <Board />
+      <RouterView />
     </div>
   </main>
 </template>
